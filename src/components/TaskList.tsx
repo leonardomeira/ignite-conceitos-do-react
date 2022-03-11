@@ -15,15 +15,39 @@ export function TaskList() {
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
   function handleCreateNewTask() {
-    // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
+    //Resolução explicada: primeiro, verifica-se se o título é nulo. Se sim, retorna-se nada e a função para. Em seguida, é definida uma nova task por meio da 
+    //const newTask. O id será um inteiro randômico, o title será recuperado do input e o isComplete é false por padrão. Essa task é adicionada ao array de tasks
+    // utilizando o hook setTasks() e, por fim, resetamos também o valor do input ao adicionar a task com o hook setNewTaskTitle().
+    if (!newTaskTitle) return;
+    
+    const newTask =  {
+      id: Math.random(),
+      title: newTaskTitle,
+      isComplete: false
+    }
+
+    setTasks(oldState => [...oldState, newTask])
+    setNewTaskTitle('')
   }
 
   function handleToggleTaskCompletion(id: number) {
-    // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
+    //Resolução explicada: criamos um novo array cujo valor é resultado do mapeamento do array de tasks verificando se o id da task mapeada é o mesmo 
+    //do id passado como argumento para a função. Se sim, a task é retornada com seu valor de isComplete invertido. Se não, a task é retornada sem alterações.
+    //Ao final de tudo, utilizamos a função setTasks() passando o novo array resultante do mapeamento.
+    const newTasks = tasks.map(task => task.id === id ? {
+      ...task,
+      isComplete: !task.isComplete,
+    } : task)
+
+    setTasks(newTasks)
   }
 
   function handleRemoveTask(id: number) {
-    // Remova uma task da listagem pelo ID
+    //Resolução explicada: criar um novo array percorrendo o array de tasks com a função filter(), cuja condição é retornar toda task que possua o id diferente
+    //do id passado como argumento à função. Executamos então o setTasks() passando este novo array que não conta com a task que deletamos.
+    const filteredTasks = tasks.filter(task => task.id !== id)
+
+    setTasks(filteredTasks)
   }
 
   return (
